@@ -8,6 +8,7 @@ import { withSwal } from "react-sweetalert2";
   const [name, setName] = useState('');
   const [categories, setCategories] = useState([]);
   const [parentCategory, setParentCategory] = useState('');
+  const [properties, setProperties] = useState([]);
 
   useEffect(()=>{
     fetchCategories()
@@ -19,18 +20,43 @@ import { withSwal } from "react-sweetalert2";
     })
   }
 
+  function handlePropertyNameChange(index,property, newName){
+    setProperties(prev=> {
+      const properties = [...prev];
+      properties[index].name = newName;
+      return properties;
+    })
+  }
+
+  function handlePropertyValuesChange(index,property, newValues){
+    setProperties(prev=> {
+      const properties = [...prev];
+      properties[index].values = newValues;
+      return properties;
+    })
+  }
+
   async function saveCategory(ev){
     ev.preventDefault();
-    const data = {name, parentCategory}
-    data._id = editedCategory?._id;
+    const data = {
+      name, 
+      parentCategory, 
+      properties:properties.map(p => ({
+        name:p.name,
+        values: p.value?.split(','),
+       }))
+    }
 
     if(editedCategory){
+      data._id = editedCategory?._id;
       await axios.put('/api/categories', data)
       setEditedCategory(null);
     }else{
       await axios.post('/api/categories', data);
     }
     setName('');
+    setParentCategory('')
+    setProperties([])
     fetchCategories();
   }
 
@@ -38,6 +64,8 @@ import { withSwal } from "react-sweetalert2";
     setEditedCategory(category);
     setName(category.name)
     setParentCategory(category.parent?._id)
+    setProperties(category.properties)
+    console.log(category.properties)
   }
 
   function deleteCategory(category){
@@ -59,6 +87,20 @@ import { withSwal } from "react-sweetalert2";
   })
   }
 
+  function addProperty(){
+    setProperties(prev=> {
+      return [...prev, {name:'', values:''}];
+    })
+  }
+
+  function removeProperty(indexToRemove){
+    setProperties(prev=>{
+      return [...prev].filter((p, pIndex)=>{
+        return pIndex !== indexToRemove;
+      })
+    })
+  }
+
 
   return(
     <Layout>
@@ -66,30 +108,80 @@ import { withSwal } from "react-sweetalert2";
       <label >
         {editedCategory ? `Edit Category ${editedCategory.name} `: 'Create Category name' }
       </label>
-      <form onSubmit={saveCategory} className="flex gap-1 py-1">
-        <input 
-          className="mb-0" 
-          type="text" 
-          placeholder={'Category name'} 
-          value={name}
-          onChange={ev=> setName(ev.target.value)}
-          />
-        <select 
-          className="mb-0"
-          onChange={ev => setParentCategory(ev.target.value)}
-          value={parentCategory}
-          >
-          <option value="0">No parent category</option>
-          {categories?.length > 0 && categories.map(category =>(
-            <option 
-              value={category._id}>
-              {category.name}
-            </option>
+      <form onSubmit={saveCategory} className=" py-1">
+        <div className="flex gap-1">
+          <input  
+            type="text" 
+            placeholder={'Category name'} 
+            value={name}
+            onChange={ev=> setName(ev.target.value)}
+            />
+          <select 
+            onChange={ev => setParentCategory(ev.target.value)}
+            value={parentCategory}
+            >
+            <option value="0">No parent category</option>
+            {categories?.length > 0 && categories.map(category =>(
+              <option 
+                value={category._id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div> 
+        <div className="mb-2">
+          <label className="block">Properties</label>
+          <button 
+            type="button" 
+            className="btn-default text-sm mb-2"
+            onClick={addProperty}>
+            Add new property
+          </button>
+          {properties.length > 0 && properties.map((property,index)=>(
+            <div className="flex gap-1 mb-2">
+              <input 
+                  className="mb-0"
+                  type="text" 
+                  value={property.name} 
+                  placeholder="property name (example: color)" 
+                  onChange={(ev) => handlePropertyNameChange(index,
+                      property, ev.target.value)}/>
+              <input
+                  className="mb-0" 
+                  type="text" 
+                  value={property.values} 
+                  placeholder="values, comma separated" 
+                  onChange={ev=> handlePropertyValuesChange(index, 
+                      property, ev.target.value)}/>
+              <button 
+                  className="btn-default"
+                  type="button"
+                  onClick={()=> removeProperty(index)}>
+                  Remove
+              </button>
+            </div>
           ))}
-        </select>
-        <button type="submit" className="btn-primary">Save</button>
+        </div>
+        <div className="flex gap-1">
+          {editedCategory && (
+            <button 
+                type="button"
+                className="btn-default"
+                onClick={()=>{ 
+                  setEditedCategory(null);
+                  setName('');
+                  setParentCategory('');
+                }}>
+              Cancel
+            </button>
+          )}
+          <button type="submit" className="btn-primary">Save</button>
+        </div>
+        
       </form>
-      <table className="basic mt-4">
+
+      {!editedCategory && (
+        <table className="basic mt-4">
         <thead>
           <tr>
             <td>Category name</td>
@@ -120,6 +212,8 @@ import { withSwal } from "react-sweetalert2";
           ))}
         </tbody>
       </table>
+      )}
+      
     </Layout>
   )
 }
