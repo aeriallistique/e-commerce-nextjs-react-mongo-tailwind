@@ -41,9 +41,9 @@ import { withSwal } from "react-sweetalert2";
     const data = {
       name, 
       parentCategory, 
-      properties:properties.map(p => ({
+      properties: properties.map(p => ({
         name:p.name,
-        values: p.value?.split(','),
+        values: p.values.split(','),
        }))
     }
 
@@ -64,8 +64,11 @@ import { withSwal } from "react-sweetalert2";
     setEditedCategory(category);
     setName(category.name)
     setParentCategory(category.parent?._id)
-    setProperties(category.properties)
-    console.log(category.properties)
+    setProperties(
+      category.properties.map(({name,values})=> ({
+        name,
+        values: values.join(',')
+      })))
   }
 
   function deleteCategory(category){
@@ -171,6 +174,7 @@ import { withSwal } from "react-sweetalert2";
                   setEditedCategory(null);
                   setName('');
                   setParentCategory('');
+                  setProperties([]);
                 }}>
               Cancel
             </button>
