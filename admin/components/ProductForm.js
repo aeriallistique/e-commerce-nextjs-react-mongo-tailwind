@@ -11,6 +11,7 @@ export default function ProductForm({
   price: existingPrice,
   images: existingImages,
   category: assignedCategory,
+  properties:assignedProperties,
   }){
 
   const [title, setTitle] = useState(existingTitle || '')
@@ -21,6 +22,7 @@ export default function ProductForm({
   const [isUploading, setIsUploading] = useState(false)
   const [categories, setCategories] = useState([])
   const [category, setCategory]= useState(assignedCategory || '')
+  const [productProperties, setProducProperties] = useState(assignedProperties || {});
   const router = useRouter();
 
   useEffect(()=>{
@@ -31,7 +33,9 @@ export default function ProductForm({
 
   async function saveProduct(ev){
     ev.preventDefault();
-    const data = {title, description,price, images, category};
+    const data = {
+      title, description,price, images, category, 
+      properties: productProperties};
     if(_id){
       // update
       await axios.put('/api/products', {...data, _id})
@@ -77,6 +81,14 @@ export default function ProductForm({
       catInfo = parentCat;
     }
   }
+
+  function setProducProp(propName, value){
+    setProducProperties(prev =>{
+      const newProductProps = {...prev};
+      newProductProps[propName] = value;
+      return newProductProps; 
+    })
+  }
  
 
   return(
@@ -99,7 +111,17 @@ export default function ProductForm({
           ))}
         </select>
         {propertiesToFill.length > 0 && propertiesToFill.map(p=> (
-          <div>{p.name}</div>
+          <div className="flex gap-1">
+            <div> {p.name} </div>  
+            <select
+              value={productProperties[p.name]} 
+              onChange={(ev)=>
+              setProducProp(p.name, ev.target.value)}>
+              {p.values.map(v =>(
+                <option value={v}>{v}</option>
+              ))}
+            </select>
+          </div>
         ))}
         <label>
           Photos
