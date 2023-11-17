@@ -196,8 +196,8 @@ import { withSwal } from "react-sweetalert2";
         <tbody>
           {categories?.length > 0 && categories.map(category =>(
             <tr>
-              <td>{category.name}</td>
-              <td>{category?.parent?.name}</td>
+              <td key={category._id}>{category.name}</td>
+              <td key={category._id +1}>{category?.parent?.name}</td>
               <td>
                 
                 <button 
