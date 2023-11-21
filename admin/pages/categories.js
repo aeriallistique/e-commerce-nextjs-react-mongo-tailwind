@@ -157,7 +157,7 @@ import { withSwal } from "react-sweetalert2";
                   onChange={ev=> handlePropertyValuesChange(index, 
                       property, ev.target.value)}/>
               <button 
-                  className="btn-default"
+                  className="btn-red"
                   type="button"
                   onClick={()=> removeProperty(index)}>
                   Remove
@@ -201,14 +201,14 @@ import { withSwal } from "react-sweetalert2";
               <td>
                 
                 <button 
-                  className="btn-primary mr-1"
+                  className="btn-default mr-1"
                   onClick={()=> editCategory(category)}
                   >
                     Edit
                   </button>
                 <button 
                   onClick={()=> deleteCategory(category)}
-                  className="btn-primary">
+                  className="btn-red">
                   Delete
                 </button>
               </td>
