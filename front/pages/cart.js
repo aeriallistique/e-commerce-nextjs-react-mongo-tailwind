@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { useContext, useEffect, useState } from "react";
 import styled from 'styled-components';
 import Button from '../components/Button'
+import axios from 'axios';
 
 const ColumnsWrapper =styled.div`
   display:grid;
@@ -24,7 +25,9 @@ export default function CartPage(){
 
   useEffect(()=>{
     if(cartProducts.length > 0 ){
-      
+      axios.post('/api/cart', {ids: cartProducts}).then(response =>{
+        setProducts(response.data);
+      })
     }
   }, [cartProducts])
 
@@ -35,17 +38,33 @@ export default function CartPage(){
     <Center>
       <ColumnsWrapper>
         <Box>
+        <h2>Cart</h2>
           {!cartProducts?.length && (
             <div>Your cart is empty.</div>
-          )}
-          {cartProducts?.length > 0 && (
-            <>
-              <h2>Cart</h2>
-              {cartProducts.map(productId => (
-                <div>{ }</div>
-              ) )}
-            </>
-          )}
+          )} 
+          {products?.length > 0 && (
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr>
+                    <td></td>
+                    {products.map(product => (
+                      <div>{product.title } : 
+                      {cartProducts.filter(id => 
+                        id === product._id).length}</div>
+                    ) )}
+                    </tr>
+                  
+                </tbody>
+              </table>
+         )} 
         </Box>
         {!!cartProducts?.length && (
           <Box>
