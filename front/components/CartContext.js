@@ -14,10 +14,10 @@ export function CartContextProvider({children}){
   },[cartProducts])
 
   useEffect(()=>{
-    if(ls & ls.getItem('cart')){
+    if(ls.getItem('cart')){ 
       setCartProducts(JSON.parse(ls.getItem('cart')));
     }
-  }, [])
+  },[])
   function addProduct(productId){
     setCartProducts(prev=> [...prev, productId])
   }
