@@ -79,10 +79,38 @@ export default function CartPage(){
     removeProduct(id);
   }
 
+  async function goToPayment(){
+    const response = await axios.post('/api/checkout', {
+      name,city, postCode, streetAddress, country,
+      cartProducts,
+    });
+    if(response.data.url){
+      window.location = response.data.url; 
+    }
+  }
+
   let total = 0;
   for (const productId of cartProducts){
     const price = products.find(p=> p._id === productId)?.price || 0;
     total += price;
+  }
+
+  if(window.location.href.includes('success')){
+    return(
+      <>
+        <Header />
+        <Center>
+          <ColumnsWrapper>
+          <Box>
+            <h1>Thanks for your order</h1>
+            <p>We will email you when your order dispatches.</p>
+          </Box>
+          </ColumnsWrapper>
+          
+        </Center>
+
+      </>
+    );
   }
 
   return(
@@ -141,7 +169,6 @@ export default function CartPage(){
         {!!cartProducts?.length && (
           <Box>
             <h2>Order Information</h2>
-            <form action="/api/checkout" method="post">
                 <Input type="text" placeholder="Name" 
                   name='name' 
                   onChange={ev=> setName(ev.target.value)}/>
@@ -162,9 +189,12 @@ export default function CartPage(){
                 <Input type="text" placeholder="Country" 
                   name='country' 
                   onChange={ev=> setCountry(ev.target.value)}/>
-                <input name= 'products' type="hidden" value={cartProducts.join(',')} />
-                <Button black block  type='submit'> Continue to payment</Button>
-            </form>
+                <Button 
+                  black 
+                  block  
+                  onClick={goToPayment}> 
+                  Continue to payment
+                </Button>
         </Box>
         )}
         
