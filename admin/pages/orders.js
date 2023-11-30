@@ -11,13 +11,24 @@ export default function OrdersPage(){
     });
   }, [])
 
+  const options = {
+    weekday:"long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour:"numeric",
+    minute:"numeric",
+    hour12:true,
+    
+  }
+
   return(
     <Layout>
       <h1>Orders</h1>
       <table className="basic">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Date</th>
             <th>Recipient</th>
             <th>Produts</th>
           </tr>
@@ -25,13 +36,20 @@ export default function OrdersPage(){
         <tbody>
           {orders.length >0 && orders.map(order => (
             <tr>
-              <td>{order._id}</td>
+              <td>{new Date(order.createdAt).toLocaleString("en-GB", options)}</td>
               <td>
                 {order.name} {order.email} <br />
                 {order.city} {order.postCode} <br />
-                {order.counry} <br />
+                {order.country} <br />
                 {order.streetAddress} <br />
-              
+              </td>
+              <td>
+                {order.line_items.map(l=>(
+                  <>
+                  {l.price_data?.product_data?.name} x 
+                  {l.quantity}<br/>
+                  </>
+                ))}
               </td>
             </tr>
           ))}
