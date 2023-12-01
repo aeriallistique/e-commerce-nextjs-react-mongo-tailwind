@@ -10,9 +10,11 @@ export default async function handler(req, res){
   const sig = req.headers['stripe-signature'];
 
   let event;
-
+  console.log(`muie afara`)
   try {
-    event = stripe.webhooks.constructEvent(await buffer(req), sig, endpointSecret);
+    event = stripe.webhooks.constructEvent((await buffer(req)).toString(), sig, endpointSecret);
+    console.log(event)
+
   } catch (err) {
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
@@ -20,15 +22,26 @@ export default async function handler(req, res){
 
   // Handle the event
   switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntentSucceeded = event.data.object;
-      console.log(paymentIntentSucceeded)
+    case 'checkout.session.completed':
+      const data = event.data.object;
+      console.log(`muie inauntru`, data);
+
+      const orderId = data.metadata.orderId;
+      const paid = data.payment_status === 'paid';
+      if(orderId && paid){
+        await Order.findByIdAndUpdate(orderId,{
+          paid:true,
+        })
+      }
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
+  res.status(200).send('ok');
 };
 
 export const config = {
-  api: {bodyparser: false,}
+  api: {bodyparser: false,
+    externalResolver: true,
+  }
 }
