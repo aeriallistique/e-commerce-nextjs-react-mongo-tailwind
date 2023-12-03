@@ -49,7 +49,7 @@ const PriceRow = styled.div`
 
 export default function ProducBox({_id, title, description, price, images}){
   const {addProduct} = useContext(CartContext);
-  const url = '/product/+_id'; 
+  const url = `/product/${_id}`; 
   return(
     <ProductWrapper>
       <WhiteBox href={url}>

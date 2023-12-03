@@ -13,7 +13,7 @@ export default function ProductsGrid({products}){
   return(
     <StyledProductsGrid>
       {products?.length > 0 && products.map(product =>(
-        <ProducBox {...product} />
+        <ProducBox key={product._id} {...product} />
       ))}
     </StyledProductsGrid>
   )
