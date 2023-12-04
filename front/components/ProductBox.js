@@ -29,21 +29,37 @@ const Title = styled(Link)`
   margin: 0;
   color: inherit;
   text-decoration: none;
+  
 `;
 
 const ProductInfoBox = styled.div`
   margin-top: 5px;
 
+  @media screen and ( max-width: 768px){
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
 `;
 const Price = styled.div`
   font-size: 1.5rem;
   font-weight: 600;
+  margin-top: 4px;
+  @media screen and ( max-width: 768px){
+    font-size: 1.2rem;
+  }
 `;
 
 const PriceRow = styled.div`
   display:flex;
-  align-items: center;
+  @media screen and ( max-width: 768px){
+    flex-direction: column;
+    justify-content: center;
+  }
   justify-content: space-between;
+  align-items: center;
   margin-top: 2px;
 `;
 

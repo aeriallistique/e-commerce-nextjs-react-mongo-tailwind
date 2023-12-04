@@ -14,34 +14,60 @@ padding: 50px 0;
 `;
 
 const Title = styled.h1`
-margin:0;
-font-weight: normal;
-font-size: 3rem;
+  margin:0;
+  font-weight: normal;
+  font-size: 2rem;
+  text-align: center;
+  @media screen and (min-width: 768px){
+    font-size: 3rem;
+  }
 `;
 
 const Desc = styled.p`
-color: #aaa;
-font-size: .8rem;
+  color: #aaa;
+  font-size: .8rem;
+  @media screen and (max-width: 768px){
+    text-align: center;
+  }
 `;
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns:1.1fr .9fr ;
+  grid-template-columns:1fr ;
   gap:40px;
   img{
     max-width: 100%;
-}
+    max-height: 200px;
+};
+  div:nth-child(1){
+    order:2;
+  }
+  @media screen and (min-width: 768px){
+    grid-template-columns:1.1fr .9fr ;
+    div:nth-child(1){
+      order:0;
+    }
+    img{
+      max-width: 100%;
+    }
+  }
 `;
 
 const Column = styled.div`
  display:flex;
  align-items: center;
+ @media screen and (max-width: 768px){
+  justify-content: center;
+}
  `;
 
 const ButtonsWrapper = styled.div`
   display: flex;
   gap: 10px;
   margin-top 25px;
+  @media screen and (max-width: 768px){
+    justify-content: center;
+  }
   `; 
 
 
@@ -65,7 +91,7 @@ export default function Featured({product}){
                   {product.description}
                 </Desc>
                 <ButtonsWrapper>
-                  <ButtonLink href={'/products/'+ product._id} white={1} outline={1} >Read more</ButtonLink>
+                  <ButtonLink href={'/product/'+ product._id} white={1} outline={1} >Read more</ButtonLink>
                   <Button white  onClick={addFeaturedToCart}>
                     <CartIcon />
                     Add to Cart

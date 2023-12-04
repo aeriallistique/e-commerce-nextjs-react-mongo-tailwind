@@ -13,9 +13,12 @@ import { CartContext } from "@/components/CartContext";
 
 const ColWrapper = styled.div`
   display:grid;
-  grid-template-columns: .8fr 1.2fr;
+  grid-template-columns: 1fr;
   gap:40px;
   margin-top:40px;
+  @media screen and (min-width: 768px){
+    grid-template-columns: .8fr 1.2fr;
+  }
 `;
 
 const PriceRow = styled.div`
@@ -28,6 +31,13 @@ const Price = styled.span`
   font-size: 2rem;
 `;
 
+const DescriptionBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 export default function ProductsPage({product}){
   const {addProduct} = useContext(CartContext)
   return(
@@ -38,7 +48,7 @@ export default function ProductsPage({product}){
           <WhiteBox> 
             <ProductImages images={product.images}  />
           </WhiteBox>
-          <div>
+          <DescriptionBox>
             <Title> {product.title} </Title>
             <p>{product.description}</p>
             <PriceRow>
@@ -58,7 +68,7 @@ export default function ProductsPage({product}){
               
             </PriceRow>
           
-          </div>
+          </DescriptionBox>
         </ColWrapper>
         
       </Center>

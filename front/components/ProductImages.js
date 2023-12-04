@@ -15,6 +15,9 @@ import { styled } from "styled-components";
     gap: 10px;
     flex-grow: 0;
     margin-top: 10px;
+    @media screen and (max-width: 768px){
+      justify-content: center;
+    }
   `;
 
   const ImageButton = styled.div`
@@ -32,6 +35,7 @@ import { styled } from "styled-components";
     align-items: center;
     cursor:pointer;
     border-radius:5px;
+    
   `;
   const BigImageWrapper = styled.div`
     text-align: center;
